@@ -7,6 +7,7 @@ namespace SpriteKind {
 /**
  * Basically the timer is counted in the form of score, starting at the time when you finish the splash text at the beginning, captured as starttime. The score display shows current time-starttime/1000 to get it in seconds, and on the finish, it shows your time then game over. There are levels, which took quite a long timme to make, because I needed to make rectangles and spikes and stuff, and I figured I would just make function for each type, makeplatform, makeespike... and when you get to the level after the last level, it triggers splash of your time then game over. The "normal" mode and "ball" mode control can be seen in the when controller "A" button pressed block, with an if/else statement to check the mode. In normal mode, it checks if you are on the ground and sets your velocity to -150, moving you up. The force bringing you down is at the at start block, where player1 acceleration is set to 300, which pulls you down. This makes the going up fast then slow down then fall, instead of snappy just up and down. The way the levels work is I saved them into function loadlevel, which does some resets and clears the level by making all sprite types to self-destruct, then based on the level number called, it will load up new sprites to form the new level. In the overlapping portal block, it controls the level+1 part and calls loadlevel. Also, the reason the player sprite is called player1 instead of just "player" is because there already exists a sprite kind called player, and it gives errors if I use it. For the platforms, in on game update (the big one), it takes every platform and puts it in an array. It checks if the player is on it or hitting the bottom of it, and stops them from going through.
  */
+// Basically the timer is counted in the form of score, starting at the time when you finish the splash text at the beginning, captured as starttime. The score display shows current time-starttime/1000 to get it in seconds, and on the finish, it shows your time then game over. There are levels, which took quite a long timme to make, because I needed to make rectangles and spikes and stuff, and I figured I would just make function for each type, makeplatform, makeespike... and when you get to the level after the last level, it triggers splash of your time then game over. The "normal" mode and "ball" mode control can be seen in the when controller "A" button pressed block, with an if/else statement to check the mode. In normal mode, it checks if you are on the ground and sets your velocity to -150, moving you up. The force bringing you down is at the at start block, where player1 acceleration is set to 300, which pulls you down. This makes the going up fast then slow down then fall, instead of snappy just up and down. The way the levels work is I saved them into function loadlevel, which does some resets and clears the level by making all sprite types to self-destruct, then based on the level number called, it will load up new sprites to form the new level. In the overlapping portal block, it controls the level+1 part and calls loadlevel. Also, the reason the player sprite is called player1 instead of just "player" is because there already exists a sprite kind called player, and it gives errors if I use it. For the platforms, in on game update (the big one), it takes every platform and puts it in an array. It checks if the player is on it or hitting the bottom of it, and stops them from going through.
 sprites.onOverlap(SpriteKind.Player, SpriteKind.spike, function (sprite, otherSprite) {
     level = 1
     mode = "normal"
@@ -23,6 +24,8 @@ function loadlevel (n: number) {
     player1.y = 120
     portalready = true
     mode = "normal"
+    player1.ay = 300
+    player1.vy = 0
     if (n == 1) {
         makeplatform(80, 100, 60, 10)
         makeplatform(140, 60, 40, 10)
@@ -101,7 +104,27 @@ function loadlevel (n: number) {
         makefinish(10, 25)
     }
     if (n == 4) {
-        game.splash("" + (game.runtime() - starttime) / 1000 + "seconds")
+        mode = "ball"
+        makespikewall(82, 10)
+        makespikewall(90, 10)
+        makespikewall(82, 125)
+        makespikewall(90, 125)
+        player1.x = 20
+        player1.y = 90
+        makeplatform(20, 95, 30, 3)
+        makeplatform(80, 95, 30, 3)
+        makeplatform(140, 95, 30, 3)
+        makeplatform(140, 30, 20, 3)
+        makespikewall(65, 70)
+        makeplatform(85, 58, 30, 3)
+        makeportal(110, 30)
+        makeportal(40, 50)
+        makeplatform(40, 20, 50, 3)
+        makefinish(30, 25)
+        makeplatform(40, 59, 50, 3)
+    }
+    if (n == 5) {
+        game.splash((game.runtime() - starttime) / 1000)
         game.gameOver(true)
     }
 }
@@ -173,6 +196,28 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.portal, function (sprite, otherS
         portalready = false
     }
 })
+function makespikewall (x: number, y: number) {
+    w = sprites.create(img`
+        22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222...........
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        ................................................................................................................................................................
+        `, SpriteKind.spike)
+    w.x = x
+    w.y = y
+}
 function clearlevel () {
     sprites.destroyAllSpritesOfKind(SpriteKind.platform)
     sprites.destroyAllSpritesOfKind(SpriteKind.spike)
@@ -193,6 +238,7 @@ let touching = false
 let bottom = false
 let top = false
 let s: Sprite = null
+let w: Sprite = null
 let f: Sprite = null
 let grounded = false
 let q: Sprite = null
