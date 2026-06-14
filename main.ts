@@ -4,6 +4,15 @@ namespace SpriteKind {
     export const finish = SpriteKind.create()
     export const portal = SpriteKind.create()
 }
+/**
+ * Basically the timer is counted in the form of score, starting at the time when you finish the splash text at the beginning, captured as starttime. The score display shows current time-starttime/1000 to get it in seconds, and on the finish, it shows your time then game over. There are levels, which took quite a long timme to make, because I needed to make rectangles and spikes and stuff, and I figured I would just make function for each type, makeplatform, makeespike... and when you get to the level after the last level, it triggers splash of your time then game over. The "normal" mode and "ball" mode control can be seen in the when controller "A" button pressed block, with an if/else statement to check the mode. In normal mode, it checks if you are on the ground and sets your velocity to -150, moving you up. The force bringing you down is at the at start block, where player1 acceleration is set to 300, which pulls you down. This makes the going up fast then slow down then fall, instead of snappy just up and down. The way the levels work is I saved them into function loadlevel, which does some resets and clears the level by making all sprite types to self-destruct, then based on the level number called, it will load up new sprites to form the new level. In the overlapping portal block, it controls the level+1 part and calls loadlevel. Also, the reason the player sprite is called player1 instead of just "player" is because there already exists a sprite kind called player, and it gives errors if I use it. For the platforms, in on game update (the big one), it takes every platform and puts it in an array. It checks if the player is on it or hitting the bottom of it, and stops them from going through.
+ */
+/**
+ * LEVELS
+ */
+/**
+ * ALSO FUNCtiON BUT I wONT COUNT IT AS ONE ALSO VERY BIG
+ */
 // Basically the timer is counted in the form of score, starting at the time when you finish the splash text at the beginning, captured as starttime. The score display shows current time-starttime/1000 to get it in seconds, and on the finish, it shows your time then game over. There are levels, which took quite a long timme to make, because I needed to make rectangles and spikes and stuff, and I figured I would just make function for each type, makeplatform, makeespike... and when you get to the level after the last level, it triggers splash of your time then game over. The "normal" mode and "ball" mode control can be seen in the when controller "A" button pressed block, with an if/else statement to check the mode. In normal mode, it checks if you are on the ground and sets your velocity to -150, moving you up. The force bringing you down is at the at start block, where player1 acceleration is set to 300, which pulls you down. This makes the going up fast then slow down then fall, instead of snappy just up and down. The way the levels work is I saved them into function loadlevel, which does some resets and clears the level by making all sprite types to self-destruct, then based on the level number called, it will load up new sprites to form the new level. In the overlapping portal block, it controls the level+1 part and calls loadlevel. Also, the reason the player sprite is called player1 instead of just "player" is because there already exists a sprite kind called player, and it gives errors if I use it. For the platforms, in on game update (the big one), it takes every platform and puts it in an array. It checks if the player is on it or hitting the bottom of it, and stops them from going through.
 // Basically the timer is counted in the form of score, starting at the time when you finish the splash text at the beginning, captured as starttime. The score display shows current time-starttime/1000 to get it in seconds, and on the finish, it shows your time then game over. There are levels, which took quite a long timme to make, because I needed to make rectangles and spikes and stuff, and I figured I would just make function for each type, makeplatform, makeespike... and when you get to the level after the last level, it triggers splash of your time then game over. The "normal" mode and "ball" mode control can be seen in the when controller "A" button pressed block, with an if/else statement to check the mode. In normal mode, it checks if you are on the ground and sets your velocity to -150, moving you up. The force bringing you down is at the at start block, where player1 acceleration is set to 300, which pulls you down. This makes the going up fast then slow down then fall, instead of snappy just up and down. The way the levels work is I saved them into function loadlevel, which does some resets and clears the level by making all sprite types to self-destruct, then based on the level number called, it will load up new sprites to form the new level. In the overlapping portal block, it controls the level+1 part and calls loadlevel. Also, the reason the player sprite is called player1 instead of just "player" is because there already exists a sprite kind called player, and it gives errors if I use it. For the platforms, in on game update (the big one), it takes every platform and puts it in an array. It checks if the player is on it or hitting the bottom of it, and stops them from going through.
 sprites.onOverlap(SpriteKind.Player, SpriteKind.spike, function (sprite, otherSprite) {
@@ -15,6 +24,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.finish, function (sprite, otherS
     level += 1
     loadlevel(level)
 })
+/**
+ * STARTING SETUP AND TEXT AND PLAYER SETUP
+ */
+/**
+ * OVERLAP LOGIC STUFF, SPIKES, FINISH, PORTAL LOGIC
+ */
 function loadlevel (n: number) {
     clearlevel()
     player1.x = 20
@@ -174,7 +189,6 @@ function loadlevel (n: number) {
                 portalready = true
                 makeportal(40 * j + 200, bottomY - 7)
                 q.vx = -150
-
             } else {
                 movespike = sprites.create(img`
                     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -189,20 +203,13 @@ function loadlevel (n: number) {
                     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
                     `, SpriteKind.spike)
                 movespike.y = bottomY
-                movespike.x = 100 * j - 800 + 20*Math.random()
+                movespike.x = 100 * j - 800 + randint(0, 30)
                 movespike.vx = -150
                 lastspike = movespike
             }
         }
-        game.onUpdate(function () {
-            if (!allspikes && lastspike && lastspike.x <= 0) {
-                allspikes = true
-            }
-            if (allspikes) {
-                sprites.destroyAllSpritesOfKind(SpriteKind.spike)
-            }
-        })
     }
+    // LEVEL 6 DODESNT ACTUALLY EXIST, THIS IS THE GAME OVER SCREEN WITH THE TIME AND GAME OVER
     if (n == 6) {
         game.splash((game.runtime() - starttime) / 1000)
         game.gameOver(true)
@@ -238,6 +245,9 @@ function makeportal (x: number, y: number) {
     q.y = y
     return q
 }
+/**
+ * A BUTTON LOGIC, IS DIFFERENT FOR LEVEL 5
+ */
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (level == 5) {
         if (mode == "normal") {
@@ -320,6 +330,9 @@ function clearlevel () {
     sprites.destroyAllSpritesOfKind(SpriteKind.finish)
     sprites.destroyAllSpritesOfKind(SpriteKind.portal)
 }
+/**
+ * FUCNTIONS
+ */
 function makespiketower (x: number, y: number) {
     t = sprites.create(img`
         ................
@@ -496,6 +509,7 @@ function makespike (x: number, y: number) {
     s.y = y
     return s
 }
+let allspikes = false
 let touching = false
 let bottom = false
 let top = false
@@ -503,20 +517,19 @@ let s: Sprite = null
 let t: Sprite = null
 let w: Sprite = null
 let f: Sprite = null
+let grounded = false
 let p: Sprite = null
+let lastspike: Sprite = null
 let q: Sprite = null
 let movespike: Sprite = null
 let pattern: number[] = []
 let bottomY = 0
 let topY = 0
-let grounded = false
 let player1: Sprite = null
 let portalready = false
 let mode = ""
 let level = 0
 let starttime = 0
-let lastspike: Sprite = null
-let allspikes = false
 game.splash("platform thingy", "try it")
 game.splash("basically left/right to ", "move left and right and a to jump, ")
 game.splash("and there is blue portal thing ", "if you cross it then you change into a different gamemode wheere a switches your gravity")
@@ -539,6 +552,9 @@ controller.moveSprite(player1, 80, 0)
 player1.ay = 300
 player1.setStayInScreen(true)
 loadlevel(level)
+/**
+ * PLATFORM AND SOLIDS LOGIC
+ */
 game.onUpdate(function () {
     info.setScore((game.runtime() - starttime) / 1000)
     grounded = false
@@ -555,6 +571,7 @@ game.onUpdate(function () {
             player1.vy = 0
         }
     }
+    // THIS IS KINDA POINTLESS LIKE EVERYTHING HERE AND BELOW, EXCEPT FOR GROUNDED TO TRUE, BECAUSE ALL OF THIS IS ACTUALLY JUST STAY IN SCREEN, I REALIZED.
     if (player1.bottom > scene.screenHeight()) {
         player1.bottom = scene.screenHeight()
         player1.vy = 0
@@ -582,5 +599,16 @@ game.onUpdate(function () {
     }
     if (!(touching)) {
         portalready = true
+    }
+})
+/**
+ * LEVEL 5 SPIKE LOGIC, MAKES EVERYTHING DISAPPEAR ONCE FINISHED
+ */
+game.onUpdate(function () {
+    if (!(allspikes) && lastspike && lastspike.x <= 0) {
+        allspikes = true
+    }
+    if (allspikes) {
+        sprites.destroyAllSpritesOfKind(SpriteKind.spike)
     }
 })
