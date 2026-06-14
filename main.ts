@@ -211,7 +211,15 @@ function loadlevel (n: number) {
     }
     // LEVEL 6 DODESNT ACTUALLY EXIST, THIS IS THE GAME OVER SCREEN WITH THE TIME AND GAME OVER
     if (n == 6) {
-        game.splash((game.runtime() - starttime) / 1000)
+        if (!(blockSettings.exists("best"))) {
+            game.splash("first run saved", (game.runtime() - starttime) / 1000)
+            blockSettings.writeNumber("best", (game.runtime() - starttime) / 1000)
+        } else if ((game.runtime() - starttime) / 1000 < blockSettings.readNumber("best")) {
+            game.splash("new best!", (game.runtime() - starttime) / 1000)
+            blockSettings.writeNumber("best", (game.runtime() - starttime) / 1000)
+        } else {
+            game.splash((game.runtime() - starttime) / 1000, "you did not get best...")
+        }
         game.gameOver(true)
     }
 }

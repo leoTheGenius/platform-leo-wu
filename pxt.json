@@ -3,7 +3,8 @@
     "version": "1.2.1",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0"
     },
     "files": [
         "main.blocks",
