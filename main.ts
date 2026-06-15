@@ -214,7 +214,7 @@ function loadlevel (n: number) {
         if (!(blockSettings.exists("best" + version))) {
             game.splash("first run saved", (game.runtime() - starttime) / 1000)
             blockSettings.writeNumber("best" + version, (game.runtime() - starttime) / 1000)
-        } else if ((game.runtime() - starttime) / 1000 < blockSettings.readNumber("best")) {
+        } else if ((game.runtime() - starttime) / 1000 < blockSettings.readNumber("best" + version)) {
             game.splash("new best!", (game.runtime() - starttime) / 1000)
             blockSettings.writeNumber("best" + version, (game.runtime() - starttime) / 1000)
         } else {
