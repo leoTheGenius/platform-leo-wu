@@ -539,7 +539,7 @@ let mode = ""
 let level = 0
 let starttime = 0
 let version = 0
-version = 1.41
+version = 1.43
 game.splash("platform thingy", "try it")
 game.splash("basically left/right to ", "move left and right and a to jump, ")
 game.splash("and there is blue portal thing ", "if you cross it then you change into a different gamemode wheere a switches your gravity")
