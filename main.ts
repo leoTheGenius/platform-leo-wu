@@ -203,7 +203,7 @@ function loadlevel (n: number) {
                     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
                     `, SpriteKind.spike)
                 movespike.y = bottomY
-                movespike.x = 100 * j - 800 + randint(0, 30)
+                movespike.x = 100 * j - 880 + randint(0, 30)
                 movespike.vx = -150
                 lastspike = movespike
             }
@@ -211,12 +211,12 @@ function loadlevel (n: number) {
     }
     // LEVEL 6 DODESNT ACTUALLY EXIST, THIS IS THE GAME OVER SCREEN WITH THE TIME AND GAME OVER
     if (n == 6) {
-        if (!(blockSettings.exists("best"))) {
+        if (!(blockSettings.exists("best" + version))) {
             game.splash("first run saved", (game.runtime() - starttime) / 1000)
-            blockSettings.writeNumber("best", (game.runtime() - starttime) / 1000)
+            blockSettings.writeNumber("best" + version, (game.runtime() - starttime) / 1000)
         } else if ((game.runtime() - starttime) / 1000 < blockSettings.readNumber("best")) {
             game.splash("new best!", (game.runtime() - starttime) / 1000)
-            blockSettings.writeNumber("best", (game.runtime() - starttime) / 1000)
+            blockSettings.writeNumber("best" + version, (game.runtime() - starttime) / 1000)
         } else {
             game.splash((game.runtime() - starttime) / 1000, "you did not get best...")
         }
@@ -538,6 +538,8 @@ let portalready = false
 let mode = ""
 let level = 0
 let starttime = 0
+let version = 0
+version = 1.4
 game.splash("platform thingy", "try it")
 game.splash("basically left/right to ", "move left and right and a to jump, ")
 game.splash("and there is blue portal thing ", "if you cross it then you change into a different gamemode wheere a switches your gravity")
